@@ -1,3 +1,4 @@
+
 (function (window) {
 	window._ = function (selector) {
 		return new lib(selector);
@@ -10,7 +11,7 @@
 					for (var i = 0; i < selector.length; i++) this[i] = selector[i];
 					this.length = selector.length;
 				} else {
-					var i = 0; while (selector[i]) this[i] = selector[i];
+					var i = 0; while (selector[i]) this[i] = selector[i++];
 					this.length = i + 1;
 				}
 			} else {
@@ -481,6 +482,12 @@
 		parent:function () {
 			this[0] = this[0].parentNode;
 			this.length = 1;
+			return this;
+		},
+		forEach:function (func) {
+			for (var i = 0; i < this.length; i++) {
+				func(_(this[i]));
+			}
 			return this;
 		}
 	};
