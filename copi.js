@@ -1,6 +1,3 @@
-/**
- * 
- */
 (function (window) {
 	window._ = function (selector) {
 		return new lib(selector);
@@ -358,9 +355,123 @@
 			}
 			return this;
 		},
-		/* Non functional prototype only returns the this object */
 		trigger:function (type, options) {
-			return this; //INCOMPLETE
+			type = type.replace(/^(on)/, "");
+			switch (type) {
+				case 'click':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"button":0, "relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var clickEvent = new MouseEvent('click', args);
+						this[i].dispatchEvent(clickEvent);
+					}
+					break;
+				case 'contextmenu':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"button":2, "relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var mEvent = new MouseEvent('contextmenu', args);
+						this[i].dispatchEvent(mEvent);
+					}
+					break;
+				case 'mousedown':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"button":0, "relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var downEvent = new MouseEvent('mousedown', args);
+						this[i].dispatchEvent(downEvent);
+					}
+					break;
+				case 'mouseup':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"button":0, "relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var upEvent = new MouseEvent('mouseup', args);
+						this[i].dispatchEvent(upEvent);
+					}
+					break;
+				case 'mouseenter':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var mEvent = new MouseEvent('mouseenter', args);
+						this[i].dispatchEvent(mEvent);
+					}
+					break;
+				case 'mouseleave':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var mEvent = new MouseEvent('mouseleave', args);
+						this[i].dispatchEvent(mEvent);
+					}
+					break;
+				case 'mouseover':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var mEvent = new MouseEvent('mouseover', args);
+						this[i].dispatchEvent(mEvent);
+					}
+					break;
+				case 'mouseout':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var mEvent = new MouseEvent('mouseout', args);
+						this[i].dispatchEvent(mEvent);
+					}
+					break;
+				case 'keydown':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var kEvent = new KeyboardEvent('keydown', args);
+						this[i].dispatchEvent(kEvent);
+					}
+					break;
+				case 'keyup':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var kEvent = new KeyboardEvent('keyup', args);
+						this[i].dispatchEvent(kEvent);
+					}
+					break;
+				case 'keypress':
+					for (var i = 0; i < this.length; i++) {
+						var args = {"relatedTarget":this[i]};
+						if (typeof options == "object") {
+							for (var key in options) args[key] = options[key];
+						}
+						var kEvent = new KeyboardEvent('keypress', args);
+						this[i].dispatchEvent(kEvent);
+					}
+					break;
+				default:
+					break;
+			}
+			return this;
 		},
 		remove:function () {
 			for (var i = 0; i < this.length; i++) {
