@@ -1,4 +1,3 @@
-
 (function (window) {
 	window._ = function (selector) {
 		return new lib(selector);
@@ -234,9 +233,14 @@
 						this[ii].style[arguments[i]] = arguments[i + 1];
 					}
 				}
-			} else if (typeof selector == "string" && typeof value == "undefined") {
+			} else if (typeof selector == "string" && (typeof value == "undefined" || typeof value == "boolean")) {
 				if (selector.indexOf(":") == -1) {
-					return this[0].style[selector];
+					if (value === true) {
+						var result = this[0].style[selector].match(/\-{0,1}[0-9]*\.{0,1}[0-9]*/i)[0];
+						return (parseFloat(result));
+					} else {
+						return this[0].style[selector];
+					}
 				} else {
 					var arr = selector.split(";");
 					for (var i = 0; i < arr.length; i++) {
