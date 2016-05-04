@@ -505,6 +505,7 @@
 					this.length--;
 				}
 			}
+			return this;
 		}
 	};
 	window._.xhr = function (type, url, callback, data) {
