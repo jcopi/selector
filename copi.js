@@ -1,4 +1,5 @@
 (function (window) {
+	"use strict";	
 	window._ = function (selector) {
 		return new lib(selector);
 	}
@@ -488,11 +489,22 @@
 			this.length = 1;
 			return this;
 		},
-		forEach:function (func) {
+		each:function (func) {
 			for (var i = 0; i < this.length; i++) {
 				func(_(this[i]));
 			}
 			return this;
+		},
+		filter:function (func) {
+			for (var i = 0; i < this.length; i++) {
+				if (!func(_(this[i]), i)) {
+					for (var n = i + 1; n < this.length; n++) {
+						this[n - 1] = this[n];
+					}
+					i--;
+					this.length--;
+				}
+			}
 		}
 	};
 	window._.xhr = function (type, url, callback, data) {
