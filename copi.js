@@ -1,3 +1,11 @@
+/**
+ * Copi JS
+ * 
+ * version: 1.3.1
+ * author : Joel Copi
+ * date   : 5 28 16
+ **/
+
 (function (window) {
 	"use strict";	
 	window._ = function (selector) {
@@ -21,22 +29,22 @@
 		} else if (typeof selector == "string") {
 			if (selector.match(/^\<[\s\S]+?\>$/)) {
 				var str = selector.substring(1, selector.length - 1);
-				var reg = /^[a-zA-z]+?(?=(\.|\#|$|\[|\:))/gmi; //Element Name
+				var reg = /^[a-zA-z]+?(?=(\.|\#|$|\[|\:))/gmi;
 				var arr = reg.exec(str); 
 				if (!arr || arr === null || !arr[0]) throw "Invalid CSS Selector String";
 				var tag = arr[0];
 				var elem = document.createElement(tag);
-				reg = /\.[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi; //Class
+				reg = /\.[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi;
 				while((arr = reg.exec(str)) !== null) {
 						this[i] = selector[i];
 						i++;
 					elem.classList.add(arr[0].substring(1, arr[0].length))
 				}
-				reg = /\#[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi; //ID
+				reg = /\#[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi;
 				arr = reg.exec(str);
 				var id = "";
 				if (arr && arr !== null && arr[0]) elem.id = arr[0].substring(1, arr[0].length);
-				reg = /\[[a-zA-z0-9_]+?\=[\s\S]+?\](?=(\.|\#|$|\[|\:))/gmi; //Attribute
+				reg = /\[[a-zA-z0-9_]+?\=[\s\S]+?\](?=(\.|\#|$|\[|\:))/gmi;
 				while((arr = reg.exec(str)) !== null) {
 					var tmp = arr[0].substring(1, arr[0].length - 1);
 					tmp = tmp.split("=");
@@ -90,19 +98,19 @@
 			} else if (typeof selector == "string") {
 				if (selector.match(/^\<[\s\S]+?\>$/)) {
 					var str = selector.substring(1, selector.length - 1);
-					var reg = /^[a-zA-z]+?(?=(\.|\#|$|\[|\:))/gmi; //Element Name
+					var reg = /^[a-zA-z]+?(?=(\.|\#|$|\[|\:))/gmi;
 					var arr = reg.exec(str); 
 					if (!arr || arr === null || !arr[0]) throw "Invalid CSS Selector String";
 					var tag = arr[0];
 					var elem = document.createElement(tag);
-					reg = /\.[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi; //Class
+					reg = /\.[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi;
 					while((arr = reg.exec(str)) !== null) {
 						elem.classList.add(arr[0].substring(1, arr[0].length))
 					}
-					reg = /\#[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi; //ID
+					reg = /\#[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi;
 					arr = reg.exec(str);
 					if (arr && arr !== null && arr[0]) elem.id = arr[0].substring(1, arr[0].length);
-					reg = /\[[a-zA-z0-9_]+?\=[\s\S]+?\](?=(\.|\#|$|\[|\:))/gmi; //Attribute
+					reg = /\[[a-zA-z0-9_]+?\=[\s\S]+?\](?=(\.|\#|$|\[|\:))/gmi;
 					while((arr = reg.exec(str)) !== null) {
 						var tmp = arr[0].substring(1, arr[0].length - 1);
 						tmp = tmp.split("=");
