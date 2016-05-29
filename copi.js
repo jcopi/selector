@@ -1,13 +1,13 @@
 /**
  * Copi JS
- * 
- * version: 1.3.1
+ *
+ * version: 1.3.2
  * author : Joel Copi
  * date   : 5 28 16
  **/
 
 (function (window) {
-	"use strict";	
+	"use strict";
 	window._ = function (selector) {
 		return new lib(selector);
 	}
@@ -29,22 +29,22 @@
 		} else if (typeof selector == "string") {
 			if (selector.match(/^\<[\s\S]+?\>$/)) {
 				var str = selector.substring(1, selector.length - 1);
-				var reg = /^[a-zA-z]+?(?=(\.|\#|$|\[|\:))/gmi;
-				var arr = reg.exec(str); 
+				var reg = /^[a-zA-z\-\_]+?(?=(\.|\#|$|\[|\:))/gmi;
+				var arr = reg.exec(str);
 				if (!arr || arr === null || !arr[0]) throw "Invalid CSS Selector String";
 				var tag = arr[0];
 				var elem = document.createElement(tag);
-				reg = /\.[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi;
+				reg = /\.[a-zA-z0-9_\-]+?(?=(\.|\#|$|\[|\:))/gmi;
 				while((arr = reg.exec(str)) !== null) {
 						this[i] = selector[i];
 						i++;
 					elem.classList.add(arr[0].substring(1, arr[0].length))
 				}
-				reg = /\#[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi;
+				reg = /\#[a-zA-z0-9_\-]+?(?=(\.|\#|$|\[|\:))/gmi;
 				arr = reg.exec(str);
 				var id = "";
 				if (arr && arr !== null && arr[0]) elem.id = arr[0].substring(1, arr[0].length);
-				reg = /\[[a-zA-z0-9_]+?\=[\s\S]+?\](?=(\.|\#|$|\[|\:))/gmi;
+				reg = /\[[a-zA-z0-9_\-]+?\=[\s\S]+?\](?=(\.|\#|$|\[|\:))/gmi;
 				while((arr = reg.exec(str)) !== null) {
 					var tmp = arr[0].substring(1, arr[0].length - 1);
 					tmp = tmp.split("=");
@@ -52,7 +52,7 @@
 				}
 				this[0] = elem;
 				this.length = 1;
-				
+
 			} else {
 				if (!document.querySelectorAll) throw "Unsupported Browser";
 				var els = document.querySelectorAll(selector);
@@ -98,19 +98,19 @@
 			} else if (typeof selector == "string") {
 				if (selector.match(/^\<[\s\S]+?\>$/)) {
 					var str = selector.substring(1, selector.length - 1);
-					var reg = /^[a-zA-z]+?(?=(\.|\#|$|\[|\:))/gmi;
-					var arr = reg.exec(str); 
+					var reg = /^[a-zA-z\-\_]+?(?=(\.|\#|$|\[|\:))/gmi;
+					var arr = reg.exec(str);
 					if (!arr || arr === null || !arr[0]) throw "Invalid CSS Selector String";
 					var tag = arr[0];
 					var elem = document.createElement(tag);
-					reg = /\.[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi;
+					reg = /\.[a-zA-z0-9_\-]+?(?=(\.|\#|$|\[|\:))/gmi;
 					while((arr = reg.exec(str)) !== null) {
 						elem.classList.add(arr[0].substring(1, arr[0].length))
 					}
-					reg = /\#[a-zA-z0-9_]+?(?=(\.|\#|$|\[|\:))/gmi;
+					reg = /\#[a-zA-z0-9_\-]+?(?=(\.|\#|$|\[|\:))/gmi;
 					arr = reg.exec(str);
 					if (arr && arr !== null && arr[0]) elem.id = arr[0].substring(1, arr[0].length);
-					reg = /\[[a-zA-z0-9_]+?\=[\s\S]+?\](?=(\.|\#|$|\[|\:))/gmi;
+					reg = /\[[a-zA-z0-9_\-]+?\=[\s\S]+?\](?=(\.|\#|$|\[|\:))/gmi;
 					while((arr = reg.exec(str)) !== null) {
 						var tmp = arr[0].substring(1, arr[0].length - 1);
 						tmp = tmp.split("=");
@@ -118,7 +118,7 @@
 					}
 					this[this.length] = elem;
 					this.length += 1;
-					
+
 				} else {
 					if (!document.querySelectorAll) throw "Unsupported Browser";
 					var els = document.querySelectorAll(selector);
@@ -259,7 +259,7 @@
 						for (var ii = 0; ii < this.length; ii++) {
 							this[ii].style[tmp[0]] = tmp[1];
 						}
-					} 
+					}
 				}
 			} else if (typeof selector == "object") {
 				for (var key in selector) {
@@ -289,7 +289,7 @@
 						for (var ii = 0; ii < this.length; ii++) {
 							this[ii].setAttribute(tmp[0],tmp[1]);
 						}
-					} 
+					}
 				}
 			} else if (typeof selector == "object") {
 				for (var key in selector) {
@@ -574,7 +574,7 @@
 		vectors:{
 			add:function (va, vb) {
 				if (va.constructor !== Array || vb.constructor !== Array) throw "Error: Paramaters must be arrays";
-				var result = []; 
+				var result = [];
 				for (var i = 0; i < (va.length > vb.length ? va.length : vb.length); i++) {
 					result.push((va[i] || 0) + (vb[i] || 0));
 				}
@@ -582,7 +582,7 @@
 			},
 			subtract:function (va, vb) {
 				if (va.constructor !== Array || vb.constructor !== Array) throw "Error: Paramaters must be arrays";
-				var result = []; 
+				var result = [];
 				for (var i = 0; i < (va.length > vb.length ? va.length : vb.length); i++) {
 					result.push((va[i] || 0) - (vb[i] || 0));
 				}
