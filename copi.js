@@ -1,7 +1,7 @@
 /**
  * Copi JS
  *
- * version: 1.3.2
+ * version: 1.4.0
  * author : Joel Copi
  * date   : 5 28 16
  **/
@@ -68,6 +68,8 @@
 				this.length = 1;
 			}
 		}
+		this.copi = true;
+
 		return this;
 	};
 	lib.prototype = window._.fn = {
@@ -351,6 +353,12 @@
 			}
 			return this;
 		},
+		height: function () {
+			return (this[0].offsetHeight || this[0].clientHeight || this[0].scrollHeight);
+		},
+		width: function () {
+			return (this[0].offsetWidth || this[0].clientWidth || this[0].scrollWidth);
+		},
 		on:function (str, obj) {
 			if (typeof str == "string" && typeof obj == "function") {
 				for (var i = 0; i < this.length; i++) {
@@ -514,6 +522,23 @@
 				}
 			}
 			return this;
+		}
+	};
+	window._.injectRule = function (selector, rules) {
+		if (rules && rules.constructor == Array) rules = rules.join(";").replace(/\;+/g, ";");
+		if (typeof this.__STYLE__ == "undefined") {
+			this.__STYLE__ = (function () {
+				var style = document.createElement("style");
+				style.appendChild(document.createTextNode(""));
+				document.head.appendChild(style);
+
+				return style.sheet;
+			})();
+		}
+		if ("insertRule" in this.__STYLE__) {
+			this.__STYLE__.insertRule(selector + "{" + rules + "}", -1);
+		} else if ("addRule" in this.__STYLE__) {
+			this.__STYLE__.addRule(selector, rules, -1);
 		}
 	};
 	window._.xhr = function (type, url, callback, data) {
