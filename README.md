@@ -36,8 +36,8 @@ hasClass | `(String class_name)` | returns true if all selected elements contain
 addClass | `(String class_name)` | adds the class `class_name` to each element in the selection
 dropClass | `(String class_name)` | removes the class `class_name` from each element in the selection
 css | `(String css_string) or (Object css_values) or (String css_name, String css_value[, ...])` | The css method gets or sets styles for the currently selected element. Setting css values can be done with a single string in the usual format `name:value;` i.e. `"border-radius:50px;"`, as any number of name value pair arguments such as `_(...).css("bacground-color","red","height","40%");`, or an object with in the format `{"style name":"style_value"}` for example `_(...).css({"background-color":"red", "height":"40%"});`. To get a particular style value of the first element in the selection pass its name as the first argument: `_(...).css("height");`
-attr | `` |
-prop | `` |
+attr | `(String name) or (String name, String value[, ...])` | gets attribute `name` from the first element or sets any number of attributes for all selected elements by name value argument pairs.
+prop | `(String name) or (String name, Generic value[, ...])` | gets JavaScript property `name` from the first element or sets any number of properties for all selected elements by name value argument pairs.
 text | `([String txt])` | returns the innerText of the first element or if `txt` is defined it sets the innerText of all selected elements to `txt`
 html | `([String html_str])` | returns the innerHTML of the first element or if `html_str` is defined it sets the innerHTML of all selected elements to `html_str`
 value | `([String val])` | returns the value of the first element or if `val` is defined it sets the value of all selected elements to `val`
