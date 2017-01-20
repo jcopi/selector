@@ -1,7 +1,7 @@
 # Selector Library
 This library allows for the selection and manipulation of multiple element. The library requires the `querySelectorAll` Web API to select elements by CSS selector string. The library has two flavors;
-* verbose:  a fully commented version [lib-verbose.js](http://github.com/jcopi/Selector_Library/lib-verbose.js)
-* minified: a fully minified version [lib-min.js](http://github.com/jcopi/Selector_Library/lib-min.js)
+* verbose:  a fully commented version [lib-verbose.js](https://github.com/jcopi/Selector_Library/blob/master/lib-verbose.js)
+* minified: a fully minified version [lib-min.js](https://github.com/jcopi/Selector_Library/blob/master/lib-min.js)
 
 ## Constructor
 The library constructor is accessed through `_` object. The constructor accepts input of multiple different types and handles them as follows
@@ -18,3 +18,28 @@ Undefined | an undefined input is equivalent to `_(document);`
 ## Prototype Methods
 Name | Behavior
 -----|---------
+index |
+include |
+exclude |
+get |
+remove |
+each |
+filter |
+child |
+parent |
+appendTo |
+append |
+toggleClass |
+hasClass |
+addClass |
+dropClass |
+css |
+attr |
+prop |
+text |
+html |
+value |
+height |
+width |
+on |
+trigger |
