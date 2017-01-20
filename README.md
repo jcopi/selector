@@ -36,12 +36,12 @@ hasClass | `(String class_name)` | returns true if all selected elements contain
 addClass | `(String class_name)` | adds the class `class_name` to each element in the selection
 dropClass | `(String class_name)` | removes the class `class_name` from each element in the selection
 css | `(String css_string) or (Object css_values) or (String css_name, String css_value[, ...])` | The css method gets or sets styles for the currently selected element. Setting css values can be done with a single string in the usual format `name:value;` i.e. `"border-radius:50px;"`, as any number of name value pair arguments such as `_(...).css("bacground-color","red","height","40%");`, or an object with in the format `{"style name":"style_value"}` for example `_(...).css({"background-color":"red", "height":"40%"});`. To get a particular style value of the first element in the selection pass its name as the first argument: `_(...).css("height");`
-attr |
-prop |
-text |
-html |
-value |
+attr | `` |
+prop | `` |
+text | `([String txt])` | returns the innerText of the first element or if `txt` is defined it sets the innerText of all selected elements to `txt`
+html | `([String html_str])` | returns the innerHTML of the first element or if `html_str` is defined it sets the innerHTML of all selected elements to `html_str`
+value | `([String val])` | returns the value of the first element or if `val` is defined it sets the value of all selected elements to `val`
 height | `(void)` | returns the height in pixels of the first element in the selection
 width | `(void)` | returns the width in pixels of the first element in the selection
-on |
-trigger |
+on | `(String evt_name, Function handler[, ...]) or (Object handlers)` | Sets event listeners for all the selected elements. Event listeners can be set with any number of name handler argument pairs, or an object of the format `{"event name":function () {/* handler */}}`.
+trigger | `(String evt_name[, Object evt_args])` | Triggers the specified event with the optional arguments for each of the selected elements. This method only trigger mouse and keyboard events. For keyboard events, the `evt_args` should contain a `key` element to specify the which key is pressed.
