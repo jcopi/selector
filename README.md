@@ -27,21 +27,21 @@ get | `(Number index)` | Returns the raw HTMLElement of the selection at `index`
 remove | `(void)` | Removes all selected elements from the document
 each | `(Function func)` | Calls `func` on each selected element
 filter | `(Function func)` | Calls `func` on each selected element if it returns `false` the current element is removed from the selection
-child | 
-parent |
-appendTo |
-append |
-toggleClass |
-hasClass |
-addClass |
-dropClass |
-css |
+child | `(Generic selector)` | Changes the current selection to all child element matching `selector` of each current element
+parent | `(void)` | Returns a aggregate selection of each element parent with duplicates removed.
+appendTo | `(Generic selector)` | appends each of the selected elements to the first element described by `selector`
+append | `(Generic selector)` | appends all elements described by `selector` to the first element in the current selection. The current selection is not changed
+toggleClass | `(String class_name)` | for each element if the class `class_name` is present it will be removed and if it is not present it will be added
+hasClass | `(String class_name)` | returns true if all selected elements contain the class `class_name` and false if they do not
+addClass | `(String class_name)` | adds the class `class_name` to each element in the selection
+dropClass | `(String class_name)` | removes the class `class_name` from each element in the selection
+css | `(String css_string) or (Object css_values)` | The css 
 attr |
 prop |
 text |
 html |
 value |
-height |
-width |
+height | `(void)` | returns the height in pixels of the first element in the selection
+width | `(void)` | returns the width in pixels of the first element in the selection
 on |
 trigger |
