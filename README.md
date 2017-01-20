@@ -16,6 +16,7 @@ Iterable Object | The elements of iterable objects are all parsed and the select
 Undefined | an undefined input is equivalent to `_(document);`
 
 ## Prototype Methods
+The library object has many prototype methods. Unless otherwise indicated all prototype return the library object so that methods can be chained together as such, `_("div.class").css("color":"red").toggleClass(".other_class");`
 
 Name | Arguments | Behavior
 -----|-----------|---------
@@ -25,8 +26,8 @@ exclude | `(Generic selector)` | Removes any elements from the current selection
 get | `(Number index)` | Returns the raw HTMLElement of the selection at `index`
 remove | `(void)` | Removes all selected elements from the document
 each | `(Function func)` | Calls `func` on each selected element
-filter |
-child |
+filter | `(Function func)` | Calls `func` on each selected element if it returns `false` the current element is removed from the selection
+child | 
 parent |
 appendTo |
 append |
