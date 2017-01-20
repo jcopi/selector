@@ -1,4 +1,4 @@
-# Selector Library
+ | select selectoGenerdesired | # Selector Library
 This library allows for the selection and manipulation of multiple element. The library requires the `querySelectorAll` Web API to select elements by CSS selector string. The library has two flavors;
 * verbose:  a fully commented version [lib-verbose.js](https://github.com/jcopi/Selector_Library/blob/master/lib-verbose.js)
 * minified: a fully minified version [lib-min.js](https://github.com/jcopi/Selector_Library/blob/master/lib-min.js)
@@ -16,14 +16,14 @@ Iterable Object | The elements of iterable objects are all parsed and the select
 Undefined | an undefined input is equivalent to `_(document);`
 
 ## Prototype Methods
-Name | Behavior
+Name | Arguments | Behavior
 -----|---------
-index |
-include |
-exclude |
-get |
-remove |
-each |
+index | `(Number desired_index)` | Sets the current selection to `desired_index`
+include | `(Generic selector)` | Adds a new selection to the current selection. `selector` functions in the same way as the constructor
+exclude | `(Generic selector)` | Removes any elements from the current selection that match `selector` which functions in the same way as the constructor
+get | `(Number index)` | Returns the raw HTMLElement of the selection at `index`
+remove | `(void)` | Removes all selected elements from the document
+each | `(Function func)` | Calls `func` on each selected element
 filter |
 child |
 parent |
