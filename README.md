@@ -16,8 +16,9 @@ Iterable Object | The elements of iterable objects are all parsed and the select
 Undefined | an undefined input is equivalent to `_(document);`
 
 ## Prototype Methods
+
 Name | Arguments | Behavior
------|---------
+-----|-----------|---------
 index | `(Number desired_index)` | Sets the current selection to `desired_index`
 include | `(Generic selector)` | Adds a new selection to the current selection. `selector` functions in the same way as the constructor
 exclude | `(Generic selector)` | Removes any elements from the current selection that match `selector` which functions in the same way as the constructor
