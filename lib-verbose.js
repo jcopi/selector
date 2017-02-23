@@ -1,7 +1,7 @@
 /* JavaScript Selector and DOM manipulation library */
 (function () {
     /* Initiate using 'Immediately Executing Function' model */
-    "use strict";
+    //"use strict";
 
     var _concat = function () {
         /*  this function accepts any number of library objects and 
@@ -17,7 +17,7 @@
         }
     }
 
-    var _lib = function (selector, parent) {
+    function _lib (selector, parent) {
         /* Avoid clobering the window scope by returning each instance as a new object */
         if (window === this) return new _lib(selector);
 
@@ -33,7 +33,7 @@
             case (selector instanceof HTMLElement):
                 this[this.length++] = selector;
                 break;
-            case (selector instanceof String):
+            case (selector instanceof String || typeof selector == "string"):
                 /*  the selector string could be an element creation string or a DOM selection string,
                     element creation strings must be bracketted by '<' and '>'  */
                 if (selector[0] == '<' && selector[selector.length - 1] == '>') {
@@ -81,7 +81,7 @@
                     }
                 }
                 break;
-            case (selector instanceof Number):
+            case (selector instanceof Number || typeof selector == "number"):
                 /* This library allows for selections to be indexed for faster use later */
                 if ("_index" in window._ && selector in window._._index) {
                     return window._._index[selector];
@@ -92,12 +92,12 @@
                 /*  The contents of an array or generic object could be any of these other data types,
                     rather than have redundant code, the cooresponding cases will use recursion 
                     to build parse the input  */
-            case (selector instanceof Array):
+            case (selector instanceof Array || (selector && selector.constructor === Array)):
                 for (var i = 0; i < selector.length || i == 0; i++) {
                     _concat.call(this, this, _lib(selector[i]));
                 }
                 break;
-            case (selector instanceof Object):
+            case (selector instanceof Object || typeof selector == "object"):
                 if ("length" in selector) {
                     /* If the object is iterable it should have a length property */
                     for (var i = 0; i < selector.length || i == 0; i++) {
@@ -111,7 +111,7 @@
                     _concat.call(this, this, _lib(undefined));
                 }
                 break;
-            case (selector instanceof Function):
+            case (selector instanceof Function || typeof selector == "function"):
                 throw "lib cannot accept an input of type 'Function'";
                 break;
             default:
@@ -123,12 +123,14 @@
         return this;
     };
 
+    window._ = _lib;
+
     _lib.prototype = window._.fn = {
         /*  All prototype methods should return this if a value is not requested,
             this allows for chaining of methods  */
         index: function (num) {
             /* Add the current selection to the index, at the specified number */
-            if (!(num instanceof Number)) throw "Method index only accpets an argument of type Number.";
+            if (!(num instanceof Number || typeof num == "number")) throw "Method index only accpets an argument of type Number.";
             if (!("_index" in window._)) window._._index = {};
             window._._index[num] = this;
 
@@ -155,7 +157,7 @@
         },
         get: function (num) {
             /* returns the raw HTML element at a particular index */
-            if (!(num instanceof Number)) throw "Method get only accepts an argument of type Number";
+            if (!(num instanceof Number || typeof num == "number")) throw "Method get only accepts an argument of type Number";
             return this[num];
         },
         remove: function () {
@@ -165,13 +167,13 @@
             return this;
         },
         each: function (func) {
-            if (!(func instanceof Function)) throw "Method each only accepts an argument of type Function";
+            if (!(func instanceof Function || typeof func == "function")) throw "Method each only accepts an argument of type Function";
             /* call the specified function on each element in the selection */
             for (var i = this.length; i--; func(_lib(this[i])));
             return this;
         },
         filter: function (func) {
-            if (!(func instanceof Function)) throw "Method each only accepts an argument of type Function";
+            if (!(func instanceof Function || typeof func == "function")) throw "Method each only accepts an argument of type Function";
             /*  call the specified function on each element and keep it
                 in the selection only if the function evaluates to true  */
             var result = [];
@@ -222,7 +224,7 @@
             return this;
         },
         toggleClass: function (str) {
-            if (!(str instanceof String)) throw "Method hasClass only accepts an argument of type String";
+            if (!(str instanceof String || typeof str == "string")) throw "Method toggleClass only accepts an argument of type String";
             /* check if each selected element contains the specified class and either add or remove it accordingly */
             for (var i = 0; i < this.length; i++) {
                 if (this[i].classList.contains(str)) {
@@ -235,7 +237,7 @@
             return this;
         },
         hasClass: function (str) {
-            if (!(str instanceof String)) throw "Method hasClass only accepts an argument of type String";
+            if (!(str instanceof String || typeof str == "string")) throw "Method hasClass only accepts an argument of type String";
             /* determine if all elements contain the specified class */
             var i = 0, result = true;
             while (i < this.length && result) result = result & this[i++].classList.contains(str);
@@ -243,14 +245,14 @@
             return result;
         },
         addClass: function (str) {
-            if (!(str instanceof String)) throw "Method hasClass only accepts an argument of type String";
+            if (!(str instanceof String || typeof str == "string")) throw "Method addClass only accepts an argument of type String";
             /* add the specified class to each selected element */
             for (var i = this.length; i--; this[i].classList.add(str));
 
             return this;
         },
         dropClass: function (str) {
-            if (!(str instanceof String)) throw "Method hasClass only accepts an argument of type String";
+            if (!(str instanceof String || typeof str == "string")) throw "Method dropClass only accepts an argument of type String";
             /* remove the specified class from each selected element */
             for (var i = this.length; i--; this[i].classList.remove(str));
 
@@ -262,7 +264,7 @@
                 /* if no arguments are given throw an error */
                 throw "Method css expects an arguments";
             } else if (arguments.length == 1) {
-                if (agrs instanceof String) {
+                if (args instanceof String || typeof args == "string") {
                     /*  allow css values to be set by a css string (i.e. color:red;)
                         if only one argument is given which isnt a css string return the value of that css style */
                     if (selector.indexOf(":") == -1) return this[0].style[args];
@@ -273,7 +275,7 @@
                                 this[ii].style[args[i].split(":")[0].trim()] = args[i].split(":")[1].trim());
                         }
                     }
-                } else if (args instanceof Array) {
+                } else if (args instanceof Array || args.constructor === Array) {
                     /* Allow an array of key, value pairs to be used to set css */
                     if (!(args[0] instanceof String)) throw "Method css only accepts an input of String Arrays";
                     for (var i = 0; i < args.length - args.length % 2; i += 2) {
@@ -281,7 +283,7 @@
                             for (var i = this.length; i--; this[i].style[args[i]] = args[i + 1]);
                         }
                     }
-                } else if (args instanceof Object) {
+                } else if (args instanceof Object || typeof args == "object") {
                     /* Allow an object of key:value pairs to be used to set css */
                     for (var key in args) {
                         for (var i = this.length; i--; this[i].style[key] = args[key]);
@@ -290,7 +292,7 @@
             } else {
                 /* Allow any number of arguments to be used in the order: key, value, key2, value2, ... */
                 for (var i = 0; i < arguments.length - arguments.length % 2; i += 2) {
-                    if (arguments[i] instanceof String && arguments[i + 1] instanceof String) {
+                    if ((arguments[i] instanceof String || typeof arguments[i] == "string") && (arguments[i + 1] instanceof String || typeof arguments[i + 1] == "string")) {
                         for (var i = this.length; i--; this[i].style[arguments[i]] = arguments[i + 1]);
                     }
                 }
@@ -303,7 +305,7 @@
             if (arguments.length == 0) {
                 throw "Method attr expects an argument.";
             } else if (arguments.length == 1) {
-                if (args instanceof String) {
+                if (args instanceof String || typeof args == "string") {
                     return this[0].getAttribute(args)
                 } else throw "Method attr can only accept a single argument of type String";
             } else {
@@ -319,7 +321,7 @@
             if (arguments.length == 0) {
                 throw "Method prop expects an argument.";
             } else if (arguments.length == 1) {
-                if (args instanceof String) {
+                if (args instanceof String || typeof args == "string") {
                     return this[0][args];
                 } else throw "Method prop can only accept a single argument of type String";
             } else {
@@ -332,7 +334,7 @@
         },
         text: function (str) {
             /* gets or sets the innerText of each element in the selection */
-            if (str instanceof String) {
+            if (str instanceof String || typeof str == "string") {
                 for (var i = this.length; i--; this[i].innerText = str);
             } else {
                 return this[0].innerText;
@@ -342,7 +344,7 @@
         },
         html: function (str) {
             /* gets or sets the innerHTML of each element in the selection */
-            if (str instanceof String) {
+            if (str instanceof String || typeof str == "string") {
                 for (var i = this.length; i--; this[i].innerHTML = str);
             } else {
                 return this[0].innerHTML;
@@ -352,7 +354,7 @@
         },
         value: function (str) {
             /* gets or sets the value of each element in the selection */
-            if (str instanceof String) {
+            if (str instanceof String || typeof str == "string") {
                 for (var i = this.length; i--; this[i].value = str);
             } else {
                 return this[0].value;
@@ -369,7 +371,7 @@
         on: function (str, obj) {
             /* adds one or more event listeners to each element in the selection */
             if (arguments.length == 0) throw "Method on expects an argument";
-            else if (arguments.length == 1 && str instanceof Object) {
+            else if (arguments.length == 1 && (str instanceof Object || typeof str == "object")) {
                 for (var key in str) {
                     for (var i = this.length; i--; this[i].addEventListener(key, str[key]));
                 }
@@ -384,14 +386,14 @@
         trigger: function (str, args) {
             /*  trigger a specified event on each element in the selection,
                 this method only works for mouse and keyboard events  */
-            if (!(str instanceof String)) throw "Method trigger only accepts a first argument of type String";
+            if (!(str instanceof String || typeof str == "string")) throw "Method trigger only accepts a first argument of type String";
             str = str.replace(/^on/, "");
             switch (true) {
                 case (str.indexOf("key") == 0):
                     /* if the event begins with 'key', dispatch a KeyboardEvent */
                     for (var i = 0; i < this.length; i++) {
                         var opts = {};
-                        if (args instanceof Object) opts = args;
+                        if (args instanceof Object || typeof args == "object") opts = args;
                         opts["relatedTarget"] = this[i];
                         var ev = new KeyboardEvent(str, opts);
                         this[i].dispatchEvent(ev);
@@ -402,7 +404,7 @@
                 case (str == "click" || str == "mouseup" || str == "mousedown"):
                     for (var i = 0; i < this.length; i++) {
                         var opts = {};
-                        if (args instanceof Object) opts = args;
+                        if (args instanceof Object || typeof args == "object") opts = args;
                         opts["button"] = 0;
                         opts["relatedTarget"] = this[i];
                         var ev = new MouseEvent(str, opts);
@@ -412,7 +414,7 @@
                 case (str == "contextmenu"):
                     for (var i = 0; i < this.length; i++) {
                         var opts = {};
-                        if (args instanceof Object) opts = args;
+                        if (args instanceof Object || typeof args == "object") opts = args;
                         opts["button"] = 2;
                         opts["relatedTarget"] = this[i];
                         var ev = new MouseEvent(str, opts);
@@ -422,7 +424,7 @@
                 default:
                     for (var i = 0; i < this.length; i++) {
                         var opts = {};
-                        if (args instanceof Object) opts = args;
+                        if (args instanceof Object || typeof args == "object") opts = args;
                         opts["relatedTarget"] = this[i];
                         var ev = new MouseEvent(str, opts);
                         this[i].dispatchEvent(ev);
@@ -436,7 +438,7 @@
 
     window._.xhr = function (type, url, callback, data) {
         var ajax = new XMLHttpRequest();
-        if (type instanceof Object) {
+        if (type instanceof Object || typeof type == "object") {
             ajax.open(type.type, type.url, true);
             ajax.onreadystatechange = (function () {
                 if (ajax.readyState == 4 && ajax.status == 200) {
@@ -459,7 +461,7 @@
     window._.cors = function (type, url, callback, credentials, data) {
         var ajax = ("withCredentials" in new XMLHttpRequest() ? new XMLHttpRequest() : (null));
         if (ajax == null) throw "CORS not supported.";
-        if (type instanceof Object) {
+        if (type instanceof Object || typeof type == "object") {
             ajax.open(type.type, type.url, true);
             ajax.withCredentials = type.credentials;
             ajax.cb = type.callback;
@@ -476,7 +478,7 @@
     window._.jsnop = function (url, callback) {
         var scrpt = document.createElement("script");
         var salt = (Math.floor(Math.random() * 100) + 1);
-        if (url instanceof Object) {
+        if (url instanceof Object || typeof url == "object") {
             window["fnctn" + salt] = url.callback;
             scrpt.src = url.url + "fnctn" + salt;
             _("head").append(scrpt);
