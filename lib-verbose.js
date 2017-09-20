@@ -11,7 +11,7 @@
 
         this.length = 0;
         for (var i = 0; i < arguments.length; i++) {
-            for (var ii = 0; i < arguments[i].length; i++) {
+            for (var ii = 0; ii < arguments[i].length; ii++) {
                 this[this.length++] = arguments[i][ii];
             }
         }
@@ -98,14 +98,14 @@
                 }
                 break;
             case (selector instanceof Object || typeof selector == "object"):
-                if ("length" in selector) {
+                if ("__islib__" in selector && selector.__islib__ === true) {
+                    /* If the input is already a library object no parsing is necessary */
+                    _concat.call(this, this, selector);
+                } else if ("length" in selector) {
                     /* If the object is iterable it should have a length property */
                     for (var i = 0; i < selector.length || i == 0; i++) {
                         _concat.call(this, this, _lib(selector[i]));
                     }
-                } else if ("__islib__" in selector && selector.__islib__ === true) {
-                    /* If the input is already a library object no parsing is necessary */
-                    _concat.call(this, this, _lib(selector));
                 } else {
                     /* If the input is of an unsupported type, return the equivalent of undefined input */
                     _concat.call(this, this, _lib(undefined));
@@ -204,10 +204,12 @@
             return _lib(result);
         },
         appendTo: function (parent) {
+            console.log(parent);
             /* An undefined parent could cause issues */
             if (!parent) throw "Method appendTo expects an argument";
             /* To increase code simplicity the input argument is passed into the library constructor */
             parent = _lib(parent);
+            console.log(parent);
             for (var i = 0; i < this.length; i++) parent[0].appendChild(this[i]);
 
             return this;
