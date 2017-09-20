@@ -19,7 +19,7 @@
 
     function _lib (selector, parent) {
         /* Avoid clobering the window scope by returning each instance as a new object */
-        if (window === this) return new _lib(selector);
+        if (window === this) return new _lib(selector, parent);
 
         /* set __doc to document if not defined, should only be used by methods */
         parent = parent || document;
@@ -187,7 +187,7 @@
                 of each element currently in the selection. */
             var i = this.length, result = new Array(this.length);
             for (var i = this.length; i--; result[i] = _lib(selector, this[i]));
-
+            
             return _lib(result);
         },
         parent: function () {
@@ -204,12 +204,10 @@
             return _lib(result);
         },
         appendTo: function (parent) {
-            console.log(parent);
             /* An undefined parent could cause issues */
             if (!parent) throw "Method appendTo expects an argument";
             /* To increase code simplicity the input argument is passed into the library constructor */
             parent = _lib(parent);
-            console.log(parent);
             for (var i = 0; i < this.length; i++) parent[0].appendChild(this[i]);
 
             return this;
