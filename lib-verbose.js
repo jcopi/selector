@@ -11,7 +11,7 @@
 
         this.length = 0;
         for (var i = 0; i < arguments.length; i++) {
-            for (var ii = 0; i < arguments[i].length; i++) {
+            for (var ii = 0; ii < arguments[i].length; ii++) {
                 this[this.length++] = arguments[i][ii];
             }
         }
@@ -19,7 +19,7 @@
 
     function _lib (selector, parent) {
         /* Avoid clobering the window scope by returning each instance as a new object */
-        if (window === this) return new _lib(selector);
+        if (window === this) return new _lib(selector, parent);
 
         /* set __doc to document if not defined, should only be used by methods */
         parent = parent || document;
@@ -98,14 +98,14 @@
                 }
                 break;
             case (selector instanceof Object || typeof selector == "object"):
-                if ("length" in selector) {
+                if ("__islib__" in selector && selector.__islib__ === true) {
+                    /* If the input is already a library object no parsing is necessary */
+                    _concat.call(this, this, selector);
+                } else if ("length" in selector) {
                     /* If the object is iterable it should have a length property */
                     for (var i = 0; i < selector.length || i == 0; i++) {
                         _concat.call(this, this, _lib(selector[i]));
                     }
-                } else if ("__islib__" in selector && selector.__islib__ === true) {
-                    /* If the input is already a library object no parsing is necessary */
-                    _concat.call(this, this, _lib(selector));
                 } else {
                     /* If the input is of an unsupported type, return the equivalent of undefined input */
                     _concat.call(this, this, _lib(undefined));
@@ -187,7 +187,7 @@
                 of each element currently in the selection. */
             var i = this.length, result = new Array(this.length);
             for (var i = this.length; i--; result[i] = _lib(selector, this[i]));
-
+            
             return _lib(result);
         },
         parent: function () {
@@ -373,11 +373,11 @@
             if (arguments.length == 0) throw "Method on expects an argument";
             else if (arguments.length == 1 && (str instanceof Object || typeof str == "object")) {
                 for (var key in str) {
-                    for (var i = this.length; i--; this[i].addEventListener(key, str[key]));
+                    for (var i = this.length; i--; this[i].addEventListener(key.replace(/^on/,""), str[key]));
                 }
             } else {
                 for (var i = 0; i < arguments.length - arguments.length % 2; i+=2) {
-                    for (var ii = this.length; ii--; this[ii].addEventListener(arguments[i], arguments[i + 1]));
+                    for (var ii = this.length; ii--; this[ii].addEventListener(arguments[i].replace(/^on/,""), arguments[i + 1]));
                 }
             }
 
