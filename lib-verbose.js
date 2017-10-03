@@ -293,7 +293,7 @@
                 /* Allow any number of arguments to be used in the order: key, value, key2, value2, ... */
                 for (var i = 0; i < arguments.length - arguments.length % 2; i += 2) {
                     if ((arguments[i] instanceof String || typeof arguments[i] == "string") && (arguments[i + 1] instanceof String || typeof arguments[i + 1] == "string")) {
-                        for (var i = this.length; i--; this[i].style[arguments[i]] = arguments[i + 1]);
+                        for (var j = this.length; j--; this[j].style[arguments[i]] = arguments[i + 1]);
                     }
                 }
             }
