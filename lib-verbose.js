@@ -1,7 +1,7 @@
 /* JavaScript Selector and DOM manipulation library */
 (function () {
     /* Initiate using 'Immediately Executing Function' model */
-    //"use strict";
+    //"use strict"; well, maybe not
 
     var _concat = function () {
         /*  this function accepts any number of library objects and 
