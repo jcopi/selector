@@ -9,12 +9,14 @@
         
         if (arguments.length === 0) return null;
 
-        this.length = 0;
+        var length = 0;
         for (var i = 0; i < arguments.length; i++) {
             for (var ii = 0; ii < arguments[i].length; ii++) {
-                this[this.length++] = arguments[i][ii];
+                this[length++] = arguments[i][ii];
             }
         }
+        
+        this.length = length;
     }
 
     function _lib (selector, parent) {
