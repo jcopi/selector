@@ -31,6 +31,8 @@ child | `(Generic selector)` | Changes the current selection to all child elemen
 parent | `(void)` | Returns a aggregate selection of each element parent with duplicates removed.
 appendTo | `(Generic selector)` | appends each of the selected elements to the first element described by `selector`
 append | `(Generic selector)` | appends all elements described by `selector` to the first element in the current selection. The current selection is not changed
+prependTo | `(Generic selector)` | prepends each of the selected element to the first element described by `selector`
+append | `(Generic selector)` | prepends all elements described by `selector` to the first element in the current selection. The current selection is not changed
 toggleClass | `(String class_name)` | for each element if the class `class_name` is present it will be removed and if it is not present it will be added
 hasClass | `(String class_name)` | returns true if all selected elements contain the class `class_name` and false if they do not
 addClass | `(String class_name)` | adds the class `class_name` to each element in the selection
