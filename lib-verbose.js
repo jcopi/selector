@@ -225,6 +225,38 @@
 
             return this;
         },
+        prependTo: function (parent) {
+            /* An undefined parent could cause issues */
+            if (!parent) throw "Method prependTo expects an argument";
+             /* To increase code simplicity the input argument is passed into the library constructor */
+            parent = _lib(parent);
+            for (var i = 0; i < this.length; i++) {
+                if (parent[0].hasChildNodes()) {
+                      parent[0].insertBefore(this[i], parent[0].childNodes[0]); 
+                } else {
+                    parent[0].appendChild(this[i]);   
+                }
+            }
+
+            return this;
+        },
+        prepend: function (children) {
+            /* Undefined children will result in errors */
+            if (!children) throw "Method prepend expects an argument";
+            /* As seen before the argument is passed into the library constructor for type safety */
+            children = _lib(children);
+            /*  Children can only be prepended to one element
+                so it makes sense to prepend them to the first element in the selection  */
+            for (var i = 0; i < children.length; i++) {
+                if (this[0].hasChildNodes()) {
+                    this[0].insertBefore(children[i], this[0].childNodes[0]);
+                } else {
+                    this[0].appendChild(children[i]);
+                }
+            }
+
+            return this;
+        },
         toggleClass: function (str) {
             if (!(str instanceof String || typeof str == "string")) throw "Method toggleClass only accepts an argument of type String";
             /* check if each selected element contains the specified class and either add or remove it accordingly */
