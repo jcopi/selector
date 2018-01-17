@@ -199,7 +199,7 @@
             for (var i = 0; i < this.length; i++) {
                 result.push(this[i].parentNode);
                 /* check all previously found parents to make sure none are repeated */
-                for (ii = i; i--; check = check && result[i] === result[ii]);
+                for (ii = i; ii--; check = check && result[i] === result[ii]);
                 if (!check) result.pop();
             }
 
