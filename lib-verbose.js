@@ -158,6 +158,11 @@
             return _lib(result);
         },
         get: function (num) {
+            /* changes the selection to include only the elemnt at the inputted index of the current selection */
+            if (!(num instanceof Number || typeof num == "number")) throw "Method get only accepts an argument of type Number";
+            return _lib(this[num]);
+        },
+        raw: function (num) {
             /* returns the raw HTML element at a particular index */
             if (!(num instanceof Number || typeof num == "number")) throw "Method get only accepts an argument of type Number";
             return this[num];
@@ -199,10 +204,30 @@
             for (var i = 0; i < this.length; i++) {
                 result.push(this[i].parentNode);
                 /* check all previously found parents to make sure none are repeated */
-                for (ii = i; ii--; check = check && result[i] === result[ii]);
+                for (var ii = i; i--; check = check && result[i] !== result[ii]);
                 if (!check) result.pop();
             }
 
+            return _lib(result);
+        },
+        /* The algorithm for sibling is not particularly space efficient at this stage of development */
+        sibling: function (selector) {
+            /* returns a selection of the siblings of each child that match the input selection */
+            var interm = [], check = true;
+            for (var i = 0; i < this.length; i++) {
+                interm.push(_lib(selector, this[i]));
+            }
+            
+            /* The interm array may hold iterable objects as elements. Calling _lib on it will flatten it,
+               allowing duplicates to be removed iteratively */
+            var interm2 = _lib(interm);
+            var result = [];
+            for (var i = 0; i < interm2.length; i++) {
+                result.push(interm2[i]);
+                for (var ii = i; i--; check = check && result[i] !== result[ii]);
+                if (!check) result.pop();
+            }
+            
             return _lib(result);
         },
         appendTo: function (parent) {

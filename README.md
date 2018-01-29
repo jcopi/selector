@@ -23,7 +23,8 @@ Name | Arguments | Behavior
 index | `(Number desired_index)` | Sets the current selection to `desired_index`
 include | `(Generic selector)` | Adds a new selection to the current selection. `selector` functions in the same way as the constructor
 exclude | `(Generic selector)` | Removes any elements from the current selection that match `selector` which functions in the same way as the constructor
-get | `(Number index)` | Returns the raw HTMLElement of the selection at `index`
+get | `(Number index)` | Shrinks the selection to only the element at `index` in the current selection
+raw | `(Number index)` | Returns the raw HTMLElement of the selection at `index`
 remove | `(void)` | Removes all selected elements from the document
 each | `(Function func)` | Calls `func` on each selected element
 filter | `(Function func)` | Calls `func` on each selected element if it returns `false` the current element is removed from the selection
