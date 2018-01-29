@@ -204,24 +204,31 @@
             for (var i = 0; i < this.length; i++) {
                 result.push(this[i].parentNode);
                 /* check all previously found parents to make sure none are repeated */
-                for (var ii = i; i--; check = check && result[i] === result[ii]);
+                for (var ii = i; i--; check = check && result[i] !== result[ii]);
                 if (!check) result.pop();
             }
 
             return _lib(result);
         },
+        /* The algorithm for sibling is not particularly space efficient at this stage of development */
         sibling: function (selector) {
             /* returns a selection of the siblings of each child that match the input selection */
-            var result = [], check = true;
+            var interm = [], check = true;
             for (var i = 0; i < this.length; i++) {
-                result.push(_lib(selector, this[i]));
+                interm.push(_lib(selector, this[i]));
             }
             
-            var interm = _lib(result);
-            for (var i = 0; i < interm.length; i++) {
-                for (var ii = i; i--; check = check && interm[i] === interm[ii]);
-                if (
+            /* The interm array may hold iterable objects as elements. Calling _lib on it will flatten it,
+               allowing duplicates to be removed iteratively */
+            var interm2 = _lib(interm);
+            var result = [];
+            for (var i = 0; i < interm2.length; i++) {
+                result.push(interm2[i]);
+                for (var ii = i; i--; check = check && result[i] !== result[ii]);
+                if (!check) result.pop();
             }
+            
+            return _lib(result);
         },
         appendTo: function (parent) {
             /* An undefined parent could cause issues */
