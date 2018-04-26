@@ -32,7 +32,7 @@
 
         switch (true) {
             /* the function handles input differently based on type */
-            case (selector instanceof HTMLElement):
+            case (selector instanceof HTMLElement || selector instanceof DocumentFragment || selector instanceof Element):
                 this[this.length++] = selector;
                 break;
             case (selector instanceof String || typeof selector == "string"):
