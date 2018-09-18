@@ -66,7 +66,7 @@
                         return "";
                     }.bind(this));
                     /* square brackets indicate a CSS style key-value pair for defining additional attributes */
-                    selector.replace(/\[[^\=]+\=(\"[^\"]*|\'[^\']*)\]/g, function (r_str) {
+                    selector.replace(/\[[^\=]+\=(\"[^\"]\"*|\'[^\']\'*)\]/g, function (r_str) {
                         /* found string must have square brackets, '=', and quotes stripped away */
                         r_str = r_str.substring(1, r_str.length);
                         var i = r_str.indexOf("=");
@@ -158,7 +158,7 @@
             return _lib(result);
         },
         get: function (num) {
-            /* changes the selection to include only the elemnt at the inputted index of the current selection */
+            /* changes the selection to include only the element at the inputted index of the current selection */
             if (!(num instanceof Number || typeof num == "number")) throw "Method get only accepts an argument of type Number";
             return _lib(this[num]);
         },
