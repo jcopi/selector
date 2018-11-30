@@ -204,7 +204,7 @@
             for (var i = 0; i < this.length; i++) {
                 result.push(this[i].parentNode);
                 /* check all previously found parents to make sure none are repeated */
-                for (var ii = i; i--; check = check && result[i] !== result[ii]);
+                for (var ii = i; ii--; check = check && result[i] !== result[ii]);
                 if (!check) result.pop();
             }
 
