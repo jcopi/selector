@@ -308,7 +308,15 @@ Selector.prototype = {
 
         return this;
     },
-
+    first: function () {
+        return this.elements[0]; 
+    },
+    index: function (num) {
+        return this.elements[num];
+    },
+    length: function () {
+        return this.elements.length;
+    },
     and: function (sel) {
         // O(n*m)
         if (!(sel instanceof Selector))
