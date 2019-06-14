@@ -18,11 +18,13 @@ Undefined | an undefined input is equivalent to `_(document);`
 ## Prototype Methods
 The library object has many prototype methods. Unless otherwise indicated all prototype return the library object so that methods can be chained together as such, `_("div.class").css("color":"red").toggleClass(".other_class");`
 
-Name | Arguments | Behavior
------|-----------|---------
-index | `(Number desired_index)` | Sets the current selection to `desired_index`
-include | `(Generic selector)` | Adds a new selection to the current selection. `selector` functions in the same way as the constructor
-exclude | `(Generic selector)` | Removes any elements from the current selection that match `selector` which functions in the same way as the constructor
+| Name    | Arguments                | Behavior
+| ----    | ---------                | --------
+| index   | `(Number desired_index)` | Sets the current selection to `desired_index`
+| include | `(Generic selector)`     | Adds a new selection to the current selection. `selector` functions in the same way as the constructor
+| exclude | `(Generic selector)`     | Removes any elements from the current selection that match `selector` which functions in the same way as the constructor
+
+
 get | `(Number index)` | Shrinks the selection to only the element at `index` in the current selection
 raw | `(Number index)` | Returns the raw HTMLElement of the selection at `index`
 remove | `(void)` | Removes all selected elements from the document
@@ -48,3 +50,19 @@ height | `(void)` | returns the height in pixels of the first element in the sel
 width | `(void)` | returns the width in pixels of the first element in the selection
 on | `(String evt_name, Function handler[, ...]) or (Object handlers)` | Sets event listeners for all the selected elements. Event listeners can be set with any number of name handler argument pairs, or an object of the format `{"event name":function () {/* handler */}}`.
 trigger | `(String evt_name[, Object evt_args])` | Triggers the specified event with the optional arguments for each of the selected elements. This method only trigger mouse and keyboard events. For keyboard events, the `evt_args` should contain a `key` element to specify the which key is pressed.
+
+## Selector Class Methods
+
+| Name                                                  | Description |
+| ---                                                   | ---         |
+| `has       (el: HTMLElement): boolean`                | Indicates whether the `el` appears in the current selection. |
+| `map<T>    (fn: (HTMLElement) => T): T[]`             | Calls the user provided function `fn` on each element and stores, and returns, the results of these calls in an array |
+| `filter    (fn: (HTMLElement) => boolean): Selector`  | |
+| `forEach   (fn: (HTMLElement) => void): this`         | |
+| `reduce<T> (fn: (T, HTMLElement) => T, init?:T): T`   | |
+| `concat    (sels: Selector): this`                    | |
+| `append    (sel: Selector): this`                     | |
+| `prepend   (sel: Selector): this`                     | |
+| `insert    (sel: Selector, child: HTMLElement): this` | |
+
+

@@ -28,8 +28,16 @@ class Selector {
         this.parent = parent;
     }
 
+    get classList () {
+        return new SelectorClass(this);
+    }
+
     get length () {
         return this.elements.size;
+    }
+
+    has (el) {
+        return this.elements.has(el);
     }
 
     map (fn) {
@@ -250,6 +258,43 @@ class Selector {
     }
 }
 
+class SelectorClass {
+    constructor (sel) {
+        this.s = sel;
+    }
+
+    add (cname) {
+        this.s.elements.forEach((v) => {
+            v.classList.add(cname);
+        });
+        return this;
+    }
+    remove (cname) {
+        this.s.elements.forEach((v) => {
+            v.classList.remove(cname);
+        });
+        return this;
+    }
+    toggle (cname, force) {
+        this.s.elements.forEach((v) => {
+            v.classList.toggle(cname, force);
+        });
+        return this;
+    }
+    replace (oldc, newc) {
+        this.s.elements.forEach((v) => {
+            v.classList.replace(oldc, newc);
+        });
+        return this;
+    }
+    item (n) {
+        return this.s.first.classList.item(n);
+    }
+    contains (n) {
+        return this.s.first.classList.contains(n);
+    }
+}
+
 $.id = function (id, parent) {
     // Ensure inputs are of the correct type
     if (!(parent && "getElementById" in parent)) parent = document;
@@ -293,14 +338,14 @@ $.element = function (el, parent) {
     
     let elements = new Set([el]);
     return new Selector(elements, parent);
-}
+};
 
 $.list = function (els, parent) {
     if (!parent) parent = document;
     
     let elements = new Set(els);
     return new Selector(elements, parent);
-}
+};
 
 $.compile = function (selector) {
     // O(n)
@@ -370,6 +415,7 @@ $.compile = function (selector) {
         return new Selector(elements, document);
     }
 };
+
 $.build = function (str) {
     return $.compile(str)();
 };
