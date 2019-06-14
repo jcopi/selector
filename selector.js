@@ -18,13 +18,236 @@ function $ (selector, parent) {
     return $.css(selector, parent);
 }
 
-function Selector (elements, parent) {
-    if (window === this)
-        return new Selector(elements);
+class Selector {
+    constructor (elements, parent) {
+        if (window === this)
+            return new Selector(elements);
 
-    this.elements = elements;
-    this.first = [...elements][0];
-    this.parent = parent;
+        this.elements = elements;
+        this.first = [...elements][0];
+        this.parent = parent;
+    }
+
+    get length () {
+        return this.elements.size;
+    }
+
+    map (fn) {
+        let elements = [];
+        for (let el of this.elements) {
+            elements.push(fn(el));
+        }
+
+        return elements;
+    }
+
+    filter (fn) {
+        let elements = new Set();
+        for (let el of this.elements) {
+            fn(el) && elements.add(el);
+        }
+
+        return new Selector(elements, this.parent);
+    }
+
+    forEach (fn) {
+        this.elements.forEach(fn);
+        return this;
+    }
+
+    reduce (fn, init) {
+        for (let el of this.elements) {
+            init = fn(init, el);
+        }
+
+        return init;
+    }
+
+    concat (sels) {
+        if (!(sel instanceof Selector))
+            return console.error("Argument not instance of Selector ($).");
+
+        for (let el of sels.elements) {
+            this.elements.add(el);
+        }
+        return this;
+    }
+
+    append (sel) {
+        sel.elements.forEach((el) => {
+            this.first.appendChild(sel);
+        });
+        return this;
+    }
+
+    prepend (sel) {
+        sel.elements.forEach(function (el) {
+            this.first.insertBefore(el, this.first.childNodes[0]);
+        });
+        return this;
+    }
+
+    insert (sel, child) {
+        sel.elements.forEach(function (el) {
+            this.first.insertBefore(el, child);
+        });
+        return this;
+    }
+
+    appendTo (sel) {
+        this.elements.forEach(function (el) {
+            sel.first.appendChild(el);
+        });
+        return this;
+    }
+
+    prependTo (sel) {
+        this.elements.forEach(function (el) {
+            sel.first.insertBefore(el, sel.first.childNodes[0]);
+        });
+        return this;
+    }
+
+    insertInto (sel, child) {
+        this.elements.forEach(function (el) {
+            sel.first.insertBefore(el, child);
+        });
+        return this;
+    }
+
+    remove () {
+        this.elements.forEach(function (el) {
+            el.parentNode.removeChild(el);
+        });
+        return this;
+    }
+
+    event (name, callbackFn) {
+        if (name.startsWith("on")) name = name.substring(2);
+
+        this.elements.forEach(function (v) {
+            v.addEventListener(name, callbackFn);
+        });
+        return this;
+    }
+
+    trigger (str, args) {
+        if (str.startsWith("on")) str = str.substring(2);
+        if (!args) args = {};
+
+        switch (true) {
+        case (str.startsWith("key") == 0):
+            /* if the event begins with 'key', dispatch a KeyboardEvent */
+            this.elements.forEach(function (v) {
+                args.relatedTarget = v;
+                var ev = new KeyboardEvent(str, opts);
+                v.dispatchEvent(ev);
+            });
+            break;
+            /*  All other event will be dispatched as MouseEvents
+                Some events require a specific button index  */
+        case (str == "click" || str == "mouseup" || str == "mousedown"):
+            this.elements.forEach(function (v) {
+                args.button = 0;
+                args.relatedTarget = v;
+                var ev = new MouseEvent(str, args);
+                v.dispatchEvent(ev);
+            });
+            break;
+        case (str == "contextmenu"):
+            this.elements.forEach(function (v) {
+                args.button = 2;
+                args.relatedTarget = v;
+                var ev = new MouseEvent(str, args);
+                v.dispatchEvent(ev);
+            });
+            break;
+        default:
+            this.elements.forEach(function (v) {
+                args.relatedTarget = v;
+                var ev = new MouseEvent(str, args);
+                v.dispatchEvent(ev);
+            });
+            break;
+        }
+
+        return this;
+    }
+
+    styles (styleObj) {
+        this.elements.forEach(function (v) {
+            Object.assign(v.style, styleObj);
+        });
+
+        return this;
+    }
+
+    and (sel) {
+        // Create a list of elements in both this and sel
+        if (!(sel instanceof Selector))
+            return console.error("Argument not instance of Selector ($).");
+        
+        let elements = new Set();
+        for (let el of this.elements) {
+            if (sel.elements.has(el)) {
+                elements.add(el);
+            }
+        }
+        return new Selector(elements, this.parent);
+    }
+
+    or (sel) {
+        // Create a list of elements in either this or sel
+        if (!(sel instanceof Selector))
+            return console.error("Argument not instance of Selector ($).");
+
+        let elements = new Set();
+        for (let el of this.elements) {
+            elements.add(el);
+        }
+
+        for (let el of sel.elements) {
+            elements.add(el);
+        }
+
+        return new Selector(elements, this.parent);
+    }
+
+    xor (sel) {
+        // Create a set of elements in either this or sel, but not both
+        if (!(sel instanceof Selector))
+            return console.error("Argument not instance of Selector ($).");
+
+        let elements = new Set();
+        for (let el of this.elements) {
+            if (!sel.elements.has(el)) {
+                elements.add(el);
+            }
+        }
+
+        for (let el of sel.elements) {
+            if (!this.elements.has(el)) {
+                elements.add(el);
+            }
+        }
+
+        return new Selector(elements, this.parent);
+    }
+
+    not (sel) {
+        // Create a set of elements not in 'sel'
+        if (!(sel instanceof Selector))
+            return console.error("Argument not instance of Selector ($).");
+
+        let elements = new Set();
+        for (let el of this.elements) {
+            if (!sel.elements.has(el)) {
+                elements.add(el);
+            }
+        }
+
+        return new Selector(elements, this.parent);
+    }
 }
 
 $.id = function (id, parent) {
@@ -175,208 +398,3 @@ $.utils = {
     }
 }
 
-Selector.prototype = {
-    constructor: Selector,
-    map: function (fn) {
-        let elements = [];
-        for (let el of this.elements) {
-            elements.push(fn(el));
-        }
-
-        return elements;
-    },
-    filter: function (fn) {
-        let elements = new Set();
-        for (let el of this.elements) {
-            fn(el) && elements.add(el);
-        }
-
-        return new Selector(elements, this.parent);
-    },
-    forEach: function (fn) {
-        this.elements.forEach(fn);
-        return this;
-    },
-    reduce: function (fn, init) {
-        for (let el of this.elements) {
-            init = fn(init, el);
-        }
-
-        return init;
-    },
-    concat: function (sels) {
-        if (!(sel instanceof Selector))
-            return console.error("Argument not instance of Selector ($).");
-
-        for (let el of sels.elements) {
-            this.elements.add(el);
-        }
-        return this;
-    },
-
-    append: function (sel) {
-        sel.elements.forEach((el) => {
-            this.first.appendChild(sel);
-        });
-        return this;
-    },
-    prepend: function (sel) {
-        sel.elements.forEach(function (el) {
-            this.first.insertBefore(el, this.first.childNodes[0]);
-        });
-        return this;
-    },
-    insert: function (sel, child) {
-        sel.elements.forEach(function (el) {
-            this.first.insertBefore(el, child);
-        });
-        return this;
-    },
-    appendTo: function (sel) {
-        this.elements.forEach(function (el) {
-            sel.first.appendChild(el);
-        });
-        return this;
-    },
-    prependTo: function (sel) {
-        this.elements.forEach(function (el) {
-            sel.first.insertBefore(el, sel.first.childNodes[0]);
-        });
-        return this;
-    },
-    insertInto: function (sel, child) {
-        this.elements.forEach(function (el) {
-            sel.first.insertBefore(el, child);
-        });
-        return this;
-    },
-    remove: function () {
-        this.elements.forEach(function (el) {
-            el.parentNode.removeChild(el);
-        });
-        return this;
-    },
-
-    event: function (name, callbackFn) {
-        if (name.startsWith("on")) name = name.substring(2);
-
-        this.elements.forEach(function (v) {
-            v.addEventListener(name, callbackFn);
-        });
-        return this;
-    },
-
-    trigger: function (str, args) {
-        if (str.startsWith("on")) str = str.substring(2);
-        if (!args) args = {};
-
-        switch (true) {
-        case (str.startsWith("key") == 0):
-            /* if the event begins with 'key', dispatch a KeyboardEvent */
-            this.elements.forEach(function (v) {
-                args.relatedTarget = v;
-                var ev = new KeyboardEvent(str, opts);
-                v.dispatchEvent(ev);
-            });
-            break;
-            /*  All other event will be dispatched as MouseEvents
-                Some events require a specific button index  */
-        case (str == "click" || str == "mouseup" || str == "mousedown"):
-            this.elements.forEach(function (v) {
-                args.button = 0;
-                args.relatedTarget = v;
-                var ev = new MouseEvent(str, args);
-                v.dispatchEvent(ev);
-            });
-            break;
-        case (str == "contextmenu"):
-            this.elements.forEach(function (v) {
-                args.button = 2;
-                args.relatedTarget = v;
-                var ev = new MouseEvent(str, args);
-                v.dispatchEvent(ev);
-            });
-            break;
-        default:
-            this.elements.forEach(function (v) {
-                args.relatedTarget = v;
-                var ev = new MouseEvent(str, args);
-                v.dispatchEvent(ev);
-            });
-            break;
-        }
-
-        return this;
-    },
-    styles: function (styleObj) {
-        this.elements.forEach(function (v) {
-            Object.assign(v.style, styleObj);
-        });
-
-        return this;
-    },
-
-    and: function (sel) {
-        // Create a list of elements in both this and sel
-        if (!(sel instanceof Selector))
-            return console.error("Argument not instance of Selector ($).");
-        
-        let elements = new Set();
-        for (let el of this.elements) {
-            if (sel.elements.has(el)) {
-                elements.add(el);
-            }
-        }
-        return new Selector(elements, this.parent);
-    },
-    or: function (sel) {
-        // Create a list of elements in either this or sel
-        if (!(sel instanceof Selector))
-            return console.error("Argument not instance of Selector ($).");
-
-        let elements = new Set();
-        for (let el of this.elements) {
-            elements.add(el);
-        }
-
-        for (let el of sel.elements) {
-            elements.add(el);
-        }
-
-        return new Selector(elements, this.parent);
-    },
-    xor: function (sel) {
-        // Create a set of elements in either this or sel, but not both
-        if (!(sel instanceof Selector))
-            return console.error("Argument not instance of Selector ($).");
-
-        let elements = new Set();
-        for (let el of this.elements) {
-            if (!sel.elements.has(el)) {
-                elements.add(el);
-            }
-        }
-
-        for (let el of sel.elements) {
-            if (!this.elements.has(el)) {
-                elements.add(el);
-            }
-        }
-
-        return new Selector(elements, this.parent);
-    },
-    not: function (sel) {
-        // Create a set of elements not in 'sel'
-        if (!(sel instanceof Selector))
-            return console.error("Argument not instance of Selector ($).");
-
-        let elements = new Set();
-        for (let el of this.elements) {
-            if (!sel.elements.has(el)) {
-                elements.add(el);
-            }
-        }
-
-        return new Selector(elements, this.parent);
-    }
-}
