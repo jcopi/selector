@@ -23,70 +23,74 @@ function Selector (elements, parent) {
         return new Selector(elements);
 
     this.elements = elements;
+    this.first = [...elements][0];
     this.parent = parent;
 }
 
 $.id = function (id, parent) {
-    parent = (parent && "getElementById" in parent) ? parent : document;
-    var element = parent.getElementById(id[0] == '#' ? id.substring(1) : id);
-    element = element ? [element] : [];
+    // Ensure inputs are of the correct type
+    if (!(parent && "getElementById" in parent)) parent = document;
+    if (id.startsWith("#")) id = id.substring(1);
+
+    let element = new Set(parent.getElementById(id));
     return new Selector(element, parent);
-};
+}
+
 $.css = function (selector, parent) {
-    parent = (parent && "querySelectorAll" in parent) ? parent : document;
-    var elements;
-    try { elements = [].slice.call(parent.querySelectorAll(selector)); } catch (e) { console.error("No elements found."); }
+    if (!(parent && "querySelectorAll" in parent)) parent = document;
+
+    let elements = new Set(parent.querySelectorAll(selector));
     return new Selector(elements, parent);
 };
+
 $.tag = function (tname, parent) {
-    parent = (parent && "getElementsByTagName" in parent) ? parent : document;
-    var elements;
-    try { elements = [].slice.call(parent.getElementsByTagName(tname)); } catch (e) { console.error("No elements found."); }
+    if (!(parent && "getElementsByTagName" in parent)) parent = document;
+
+    let elements = new Set(parent.getElementsByClassName(tname));
     return new Selector(elements, parent);
 };
+
 $.name = function (name, parent) {
-    parent = (parent && "getElementsByName" in parent) ? parent : document;
-    var elements;
-    try { elements = [].slice.call(parent.getElementsByName(tname)); } catch (e) { console.error("No elements found."); }
+    if (!(parent && "getElementsByName" in parent)) parent = document;
+
+    let elements = new Set(parent.getElementsByName(name));
     return new Selector(elements, parent);
 };
+
 $.class = function (cname, parent) {
-    parent = (parent && "getElementsByClassName" in parent) ? parent : document;
-    var elements;
-    try { elements = [].slice.call(parent.getElementsByClassName(cname[0] == '.' ? cname.substring(1) : cname)); } catch (e) { console.error("No elements found."); }
+    if (!(parent && "getElementsByClassName" in parent)) parent = document;
+    if (cname.startsWith(".")) cname = cname.substring(1);
+
+    let elements = new Set(parent.getElementsByClassName(cname));
     return new Selector(elements, parent);
 };
+
 $.element = function (el, parent) {
-    parent = parent || document;
-    return new Selector([el], parent);
-};
-$.slist = function (els, parent) {
-    parent = parent || document;
-    var elements;
-    try { elements = [].slice.call(els); } catch (e) { console.error("No elements found."); }
+    if (!parent) parent = document;
+    
+    let elements = new Set([el]);
     return new Selector(elements, parent);
-};
+}
+
 $.list = function (els, parent) {
-    parent = parent || document;
-    var elements = els;
-    try {
-        if (!Array.isArray(elements))
-            elements = [].slice.call(els);
-        $.utils.array.removeDuplicates(elements);
-    } catch (e) { console.error("No elements found."); }
+    if (!parent) parent = document;
+    
+    let elements = new Set(els);
     return new Selector(elements, parent);
-};
+}
+
 $.compile = function (selector) {
     // O(n)
     if (!selector.startsWith('<') || !selector.endsWith('>')) {
         console.error("Invalid element creation string.");
     }
+    // Create an element based on the creation string
+    let master = null;
+    // Prepare string for processing
     selector = selector.substring(1, selector.length - 1);
     selector += '\0';
+    // list of key characters to influence processing
     let chkArray = ['.','#','$','[',']','\0'];
-    //let element = null;
-    let creator = null;
-    let fqueue = [];
     for (let i = 0, state = 0, ptr = 0, esc = false, strStart = -1, tmp = ""; i < selector.length; ++i) {
         if (esc) {
             tmp += selector[i];
@@ -110,36 +114,23 @@ $.compile = function (selector) {
         if (chk >= 0) {
             switch (state) {
             case 0:
-                creator = document.createElement.bind(document, tmp);
-                //element = document.createElement(tmp);
+                master = document.createElement(tmp);
                 break;
             case 1:
-                fqueue.push(function (a, b) {
-                    b.classList.add(a);
-                }.bind(null, tmp));
-                //element.classList.add(tmp);
+                master.classList.add(tmp);
                 break;
             case 2:
-                fqueue.push(function (a, b) {
-                    b.id = a;
-                }.bind(null, tmp));
-                //element.id = tmp;
+                master.id = tmp;
                 break;
             case 3:
-                fqueue.push(function (a, b) {
-                    b.name = a;
-                }.bind(null, tmp));
-                //element.name = tmp;
+                master.name = tmp;
                 break;
             case 4:
                 if (chk !== 4)
                     continue;
 
                 let vals = tmp.split('=', 2);
-                fqueue.push(function (a, b, c) {
-                    c.setAttribute(a,b);
-                }.bind(null, vals[0], vals[1]));
-                //element.setAttribute(vals[0], vals[1]);
+                master.setAttribute(vals[0], vals[1]);
                 break;
             }
             
@@ -150,13 +141,11 @@ $.compile = function (selector) {
         }
     }
 
-    return function (create, fnQueue) {
-        var x = create.call(document);
-        fnQueue.forEach(function (v) {
-            v.call(null, x);
-        });
-        return new Selector([x], document);
-    }.bind(null, creator, fqueue);
+    return function (master) {
+        let el = master.cloneNode(true);
+        let elements = new Set([el]);
+        return new Selector(elements, document);
+    }
 };
 $.build = function (str) {
     return $.compile(str)();
@@ -189,58 +178,75 @@ $.utils = {
 Selector.prototype = {
     constructor: Selector,
     map: function (fn) {
-        return this.elements.map(fn);
+        let elements = [];
+        for (let el of this.elements) {
+            elements.push(fn(el));
+        }
+
+        return elements;
     },
     filter: function (fn) {
-        return new Selector(this.elements.filter(fn), this.parent);
+        let elements = new Set();
+        for (let el of this.elements) {
+            fn(el) && elements.add(el);
+        }
+
+        return new Selector(elements, this.parent);
     },
     forEach: function (fn) {
         this.elements.forEach(fn);
         return this;
     },
     reduce: function (fn, init) {
-        return this.elements.reduce(fn, init);
+        for (let el of this.elements) {
+            init = fn(init, el);
+        }
+
+        return init;
     },
     concat: function (sels) {
         if (!(sel instanceof Selector))
             return console.error("Argument not instance of Selector ($).");
-        this.elements.concat(sels.elements);
+
+        for (let el of sels.elements) {
+            this.elements.add(el);
+        }
         return this;
     },
 
     append: function (sel) {
-        sel.elements.forEach(function (el) {
-            this.elements[0].appendChild(sel);
+        sel.elements.forEach((el) => {
+            this.first.appendChild(sel);
         });
         return this;
     },
     prepend: function (sel) {
         sel.elements.forEach(function (el) {
-            this.elements[0].insertBefore(el, this.elements[0].childNodes[0]);
+            this.first.insertBefore(el, this.first.childNodes[0]);
         });
         return this;
     },
     insert: function (sel, child) {
         sel.elements.forEach(function (el) {
-            this.elements[0].insertBefore(el, child);
+            this.first.insertBefore(el, child);
         });
         return this;
     },
     appendTo: function (sel) {
         this.elements.forEach(function (el) {
-            sel.elements[0].appendChild(el);
+            sel.first.appendChild(el);
         });
         return this;
     },
     prependTo: function (sel) {
         this.elements.forEach(function (el) {
-            sel.elements[0].insertBefore(el, sel.elements[0].childNodes[0]);
+            sel.first.insertBefore(el, sel.first.childNodes[0]);
         });
         return this;
     },
     insertInto: function (sel, child) {
         this.elements.forEach(function (el) {
-            sel.elements[0].insertBefore(el, child);
+            sel.first.insertBefore(el, child);
         });
         return this;
     },
@@ -252,24 +258,25 @@ Selector.prototype = {
     },
 
     event: function (name, callbackFn) {
-        if (name[0] == 'o' && name[1] == 'n')
-            name = name.substring(2);
+        if (name.startsWith("on")) name = name.substring(2);
+
         this.elements.forEach(function (v) {
             v.addEventListener(name, callbackFn);
         });
         return this;
     },
+
     trigger: function (str, args) {
-        if (str[0] == 'o' && str[1] == 'n')
-            str = str.substring(2);
-        args = args || {};
+        if (str.startsWith("on")) str = str.substring(2);
+        if (!args) args = {};
+
         switch (true) {
-        case (str.indexOf("key") == 0):
+        case (str.startsWith("key") == 0):
             /* if the event begins with 'key', dispatch a KeyboardEvent */
             this.elements.forEach(function (v) {
                 args.relatedTarget = v;
                 var ev = new KeyboardEvent(str, opts);
-                v.dispatchEvent(ev)
+                v.dispatchEvent(ev);
             });
             break;
             /*  All other event will be dispatched as MouseEvents
@@ -310,70 +317,66 @@ Selector.prototype = {
     },
 
     and: function (sel) {
-        // O(n*m)
+        // Create a list of elements in both this and sel
         if (!(sel instanceof Selector))
             return console.error("Argument not instance of Selector ($).");
-        var elements = [];
-        for (var i = 0; i < this.elements.length; ++i) {
-            for (var j = 0; j < sel.elements.length; ++j) {
-                if (sel.elements[j] === this.elements[i]) {
-                    elements.push(this.elements[i]);
-                    break;
-                }
+        
+        let elements = new Set();
+        for (let el of this.elements) {
+            if (sel.elements.has(el)) {
+                elements.add(el);
             }
         }
         return new Selector(elements, this.parent);
     },
     or: function (sel) {
-        // O(n*m)
+        // Create a list of elements in either this or sel
         if (!(sel instanceof Selector))
             return console.error("Argument not instance of Selector ($).");
-        var a = this.elements.slice(), b = sel.elements.slice();
-        for (var i = 0; i < a.length; ++i) {
-            for (var j = 0; j < b.length; ++j) {
-                if (a[i] === b[j]) {
-                    $.utils.array.unorderedRemove(b, j);
-                    break;
-                }
+
+        let elements = new Set();
+        for (let el of this.elements) {
+            elements.add(el);
+        }
+
+        for (let el of sel.elements) {
+            elements.add(el);
+        }
+
+        return new Selector(elements, this.parent);
+    },
+    xor: function (sel) {
+        // Create a set of elements in either this or sel, but not both
+        if (!(sel instanceof Selector))
+            return console.error("Argument not instance of Selector ($).");
+
+        let elements = new Set();
+        for (let el of this.elements) {
+            if (!sel.elements.has(el)) {
+                elements.add(el);
             }
         }
 
-        return new Selector(a.concat(b), this.parent);
-    },
-    xor: function (sel) {
-        // O(n*m)
-        if (!(sel instanceof Selector))
-            return console.error("Argument not instance of Selector ($).");
-        var a = this.elements.slice(), b = this.elements.slice();
-        for (var i = 0; i < a.length; ++i) {
-            for (var j = 0; j < b.length; ++j) {
-                if (a[i] === b[j]) {
-                    $.utils.array.unorderedRemove(a, i--);
-                    $.utils.array.unorderedRemove(b, j--);
-                    break;
-                }
-            }
-        }
-        return new Selector(a.concat(b), this.parent);
-    },
-    not: function (sel) {
-        // O(n*m)
-        if (!(sel instanceof Selector))
-            return console.error("Argument not instance of Selector ($).");
-        var elements = this.elements.slice();
-        for (var i = 0; i < elements.length; ++i) {
-            for (var j = 0; j < sel.elements.length; ++j) {
-                if (elements[i] === sel.elements[j]) {
-                    $.utils.array.unorderedRemove(elements, i--);
-                    break;
-                }
+        for (let el of sel.elements) {
+            if (!this.elements.has(el)) {
+                elements.add(el);
             }
         }
 
         return new Selector(elements, this.parent);
     },
-    removeDuplicates: function () {
-        $.utils.array.removeDuplicates(this.elements);
-        return this;
+    not: function (sel) {
+        // Create a set of elements not in 'sel'
+        if (!(sel instanceof Selector))
+            return console.error("Argument not instance of Selector ($).");
+
+        let elements = new Set();
+        for (let el of this.elements) {
+            if (!sel.elements.has(el)) {
+                elements.add(el);
+            }
+        }
+
+        return new Selector(elements, this.parent);
     }
 }
