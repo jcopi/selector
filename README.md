@@ -1,4 +1,7 @@
 # Selector Library
+
+**Only Valid for v2.0.2 and earlier** 
+
 This library allows for the selection and manipulation of multiple element. The library requires the `querySelectorAll` Web API to select elements by CSS selector string. The library has two flavors;
 * verbose:  a fully commented version [lib-verbose.js](https://github.com/jcopi/Selector_Library/blob/master/lib-verbose.js)
 * minified: a fully minified version [lib.min.js](https://github.com/jcopi/Selector_Library/blob/master/lib.min.js). Minified versions are updated per release, not continuously.

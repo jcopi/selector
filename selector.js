@@ -192,6 +192,7 @@ class Selector {
 
     and (sel) {
         // Create a list of elements in both this and sel
+
         if (!(sel instanceof Selector))
             return console.error("Argument not instance of Selector ($).");
         
@@ -443,4 +444,3 @@ $.utils = {
         }
     }
 }
-
