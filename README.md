@@ -1,6 +1,6 @@
 # Selector Library
 
-**Only Valid for v2.0.2 and earlier** 
+***INCOMPLETE***
 
 This library allows for the selection and manipulation of multiple element. The library requires the `querySelectorAll` Web API to select elements by CSS selector string. 
 Elements that are selected are stored internally in a `Set`. Class member functions operate on one or more elements in the set as described below.
