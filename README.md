@@ -2,9 +2,8 @@
 
 **Only Valid for v2.0.2 and earlier** 
 
-This library allows for the selection and manipulation of multiple element. The library requires the `querySelectorAll` Web API to select elements by CSS selector string. The library has two flavors;
-* verbose:  a fully commented version [lib-verbose.js](https://github.com/jcopi/Selector_Library/blob/master/lib-verbose.js)
-* minified: a fully minified version [lib.min.js](https://github.com/jcopi/Selector_Library/blob/master/lib.min.js). Minified versions are updated per release, not continuously.
+This library allows for the selection and manipulation of multiple element. The library requires the `querySelectorAll` Web API to select elements by CSS selector string. 
+Elements that are selected are stored internally in a `Set`. Class member functions operate on one or more elements in the set as described below.
 
 ## Constructor
 The library constructor is accessed through `$` function. The `$` function accepts css selector strings and has methods for more performant targeted selection. These are enumerate below
@@ -12,23 +11,23 @@ The library constructor is accessed through `$` function. The `$` function accep
 | Method Definition                             | Behavior    |
 | ---                                           | ---         |
 | `$.css     (selector: string)   => Selector`  | Returns a `Selector` instance of elements that match the supplied css selector. This is the same as calling `$(selector)`. |
-| `$.id      (id: string)         => Selector`  | |
-| `$.tag     (tagName: string)    => Selector`  | |
-| `$.name    (name: string)       => Selector`  | |
-| `$.class   (name: string)       => Selector`  | |
-| `$.element (el: HTMLElement)    => Selector`  | |
-| `$.list    (els: HTMLElement[]) => Selector`  | |
-| `$.build   (str: string)        => Selector`  | |
-| `$.compile (str: string) => (() => Selector)` | |
+| `$.id      (id: string)         => Selector`  | Returns a `Selector` instance of the element that matches the supplied id. |
+| `$.tag     (tagName: string)    => Selector`  | Returns a `Selector` instance of elements that match the supplied tag name. |
+| `$.name    (name: string)       => Selector`  | Returns a `Selector` instance of elements that match the supplied name.|
+| `$.class   (name: string)       => Selector`  | Returns a `Selector` instance of elements that match the supplied class definition.|
+| `$.element (el: HTMLElement)    => Selector`  | Returns a `Selector` of the supplied elements. |
+| `$.list    (els: HTMLElement[]) => Selector`  | Returns a `Selector` of the supplied iterable list of elements. |
+| `$.build   (str: string)        => Selector`  | Builds an element based on the provided element creation string and returns a `Selector` instance containing it. |
+| `$.compile (str: string) => (() => Selector)` | Returns a function which will have the same functionality as `$.build` with the supplied element creation string, but without having to parse a string on every call. |
 
 ## Selector Class Methods
 
 | Name                                                  | Description |
 | ---                                                   | ---         |
 | `has       (el: HTMLElement): boolean`                | Indicates whether the `el` appears in the current selection. |
-| `map<T>    (fn: (HTMLElement) => T): T[]`             | Calls the user provided function `fn` on each element and stores, and returns, the results of these calls in an array |
-| `filter    (fn: (HTMLElement) => boolean): Selector`  | |
-| `forEach   (fn: (HTMLElement) => void): this`         | |
+| `map<T>    (fn: (HTMLElement) => T): T[]`             | Calls the user provided function `fn` on each element and stores, and returns, the results of these calls in an array. |
+| `filter    (fn: (HTMLElement) => boolean): Selector`  | Filters the selected elements using the user provided function `fn`. `fn` is called on each element and only those for which `fn` returns `true` are kept. `this` is returned for chaining. |
+| `forEach   (fn: (HTMLElement) => void): this`         | Calls the user provided function `fn` on each element and returns `this` for chaining. |
 | `reduce<T> (fn: (T, HTMLElement) => T, init?:T): T`   | |
 | `concat    (sels: Selector): this`                    | |
 | `append    (sel: Selector): this`                     | |
