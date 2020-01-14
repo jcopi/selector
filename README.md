@@ -3,7 +3,7 @@
 This library allows for the selection and manipulation of multiple element. The library requires the `querySelectorAll` Web API to select elements by CSS selector string. 
 Elements that are selected are stored internally in a `Set`. Class member functions operate on one or more elements in the set as described below.
 
-2.53kB minified and gzipped (as perfromed by cdn.jsdelivr.net)
+2.53kB minified and gzipped (as performed by cdn.jsdelivr.net)
 
 ## Constructor
 The library constructor is accessed through `$` function. The `$` function accepts css selector strings and has methods for more performant targeted selection. These are enumerate below
