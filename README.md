@@ -60,7 +60,7 @@ The library constructor is accessed through `$` function. The `$` function accep
 | `get html  (): string`           | Returns the `innerHTML` of the first selected element. |
 | `set value (val: string): void`  | Sets the `value` of all selected elements to `val`. |
 | `set text  (txt: string): void`  | Sets the `innerText` of all selected elements to `txt`. |
-| `set html  (html: string): void` | Returns the `innerHTML` of all selected elements to `html`. |
+| `set html  (html: string): void` | Sets the `innerHTML` of all selected elements to `html`. |
 
 ### Selection Joining/Merging
 | Name                        | Description |
