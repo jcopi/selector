@@ -36,14 +36,6 @@ class Selector {
         return this.elements.size;
     }
 
-    get value () {}
-
-    get text () {}
-
-    get html () {}
-
-
-
     has (el) {
         return this.elements.has(el);
     }
@@ -193,6 +185,60 @@ class Selector {
     styles (styleObj) {
         this.elements.forEach(function (v) {
             Object.assign(v.style, styleObj);
+        });
+
+        return this;
+    }
+
+    get value () {
+        return this.first.value;
+    }
+
+    get text () {
+        return this.first.innerText;
+    }
+
+    get html () {
+        return this.first.innerHTML;
+    }
+
+    set value (val) {
+        this.elements.forEach((v) => {
+            v.value = val;
+        });
+    }
+
+    set text (txt) {
+        this.elements.forEach((v) => {
+            v.innerText = txt;
+        });
+    }
+
+    set html (html) {
+        this.elements.forEach((v) => {
+            v.innerHTML = html;
+        });
+    }
+
+    getAttr (name) {
+        return this.first.getAttribute(name);
+    }
+
+    getProp (name, value) {
+        return this.first[name];
+    }
+
+    setAttr (name, value) {
+        this.elements.forEach((v) => {
+            v.setAttribute(name, value);
+        });
+
+        return this;
+    }
+
+    setProp (name, value) {
+        this.elements.forEach((v) => {
+            v[name] = value;
         });
 
         return this;

@@ -42,11 +42,22 @@ The library constructor is accessed through `$` function. The `$` function accep
 | `remove    (void): this`                              | Removes all elements contained in the calling `Selection` from the DOM tree. |
 
 ### DOM Element Manipulation
-| Name                                                  | Description |
-| ---                                                   | ---         |
-| `event     (name: string, fn: (Event) => void): this` | Adds the function `fn` as the callback for the event with name `name` for each selected element. |
-| `trigger   (name: string, args: EventInit): this`     | Triggers an event named `name` with the provided EventInfo dictionary, `args` on each selected element. |
-| `styles    (styleObj: Object): this`                  | Assigns the style key-value pairs in `styleObj` to the `.style` object of each selected element. |
+| Name                                                | Description |
+| ---                                                 | ---         |
+| `event   (name: string, fn: (Event) => void): this` | Adds the function `fn` as the callback for the event with name `name` for each selected element. |
+| `trigger (name: string, args: EventInit): this`     | Triggers an event named `name` with the provided EventInfo dictionary, `args` on each selected element. |
+| `styles  (styleObj: Object): this`                  | Assigns the style key-value pairs in `styleObj` to the `.style` object of each selected element. |
+| `getAttr (name: string): this`                      | Returns the the value of the attribute named `name` of the first selected element. |
+| `getProp (name: string): this`                      | Returns the the value of the property named `name` of the first selected element. |
+| `setAttr (name: string, value: any): this`          | Sets the attribute named `name` of each selected element to `value`. |
+| `setProp (name: string, value: any): this`          | Sets the property named `name` of each selected element to `value`. |
+| ---                                                 | ---         |
+| `get value (): string`           | Returns the `value` of the first selected element. |
+| `get text  (): string`           | Returns the `innerText` of the first selected element. |
+| `get html  (): string`           | Returns the `innerHTML` of the first selected element. |
+| `set value (val: string): void`  | Sets the `value` of all selected elements to `val`. |
+| `set text  (txt: string): void`  | Sets the `innerText` of all selected elements to `txt`. |
+| `set html  (html: string): void` | Returns the `innerHTML` of all selected elements to `html`. |
 
 ### Selection Joining/Merging
 | Name                        | Description |
