@@ -28,10 +28,10 @@ The library constructor is accessed through `$` function. The `$` function accep
 | `map<T>    (fn: (HTMLElement) => T): T[]`             | Calls the user provided function `fn` on each element and stores, and returns, the results of these calls in an array. |
 | `filter    (fn: (HTMLElement) => boolean): Selector`  | Filters the selected elements using the user provided function `fn`. `fn` is called on each element and only those for which `fn` returns `true` are kept. `this` is returned for chaining. |
 | `forEach   (fn: (HTMLElement) => void): this`         | Calls the user provided function `fn` on each element and returns `this` for chaining. |
-| `reduce<T> (fn: (T, HTMLElement) => T, init?:T): T`   | |
-| `concat    (sels: Selector): this`                    | |
-| `append    (sel: Selector): this`                     | |
-| `prepend   (sel: Selector): this`                     | |
-| `insert    (sel: Selector, child: HTMLElement): this` | |
+| `reduce<T> (fn: (T, HTMLElement) => T, init?:T): T`   | Executes a reducer function, `fn` on each element resulting in a single value. ||
+| `concat    (sels: Selector): this`                    | Adds the contents of one Selection, `sels` instance to to the calling instance. |
+| `append    (sel: Selector): this`                     | Appends the selected elements of `sel` to the first element of the calling instance. This is equivalent to calling `appendChild` with each child element. |
+| `prepend   (sel: Selector): this`                     | Inserts the selected elements of `sel` as the as the first child elements of the first element of the calling instance. |
+| `insert    (sel: Selector, child: HTMLElement): this` | Inserts the selected elements of `sel` as before the provided child element. This is equivalent to `insertBefore`. |
 
 
