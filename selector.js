@@ -81,6 +81,40 @@ class Selector {
         return this;
     }
 
+    parents (css) {
+        let elements = new Set();
+        this.elements.forEach((v) => {
+            if (typeof css !== "string" || v.parentNode.matches(css)) {
+                elements.add(v.parentNode);
+            }
+        });
+        return new Selector(elements, document);
+    }
+
+    siblings (css) {
+        let elements = new Set();
+        this.elements.forEach((v) => {
+            for (var i = 0; i < v.parentNode.children.length; i++) {
+                if (v.parentNode.children[i] !== v && (typeof css !== "string" || v.parentNode.children[i].matches(css))) {
+                    elements.add(v.parentNode.children[i]);
+                }
+            }
+        });
+        return new Selector(elements, document);
+    }
+
+    children (css) {
+        let elements = new Set();
+        this.elements.forEach((v) => {
+            for (let i = 0; i < v.children.length; i++) {
+                if (typeof css !== "string" || v.children[i].matches(css)) {
+                    elements.add(v.children[i]);
+                }
+            }
+        });
+        return new Selector(elements, document);
+    }
+
     append (sel) {
         sel.elements.forEach((el) => {
             this.first.appendChild(sel);

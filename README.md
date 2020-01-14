@@ -27,7 +27,7 @@ The library constructor is accessed through `$` function. The `$` function accep
 | `map<T>    (fn: (HTMLElement) => T): T[]`            | Calls the user provided function `fn` on each element and stores, and returns, the results of these calls in an array. |
 | `filter    (fn: (HTMLElement) => boolean): Selector` | Filters the selected elements using the user provided function `fn`. `fn` is called on each element and only those for which `fn` returns `true` are kept. `this` is returned for chaining. |
 | `forEach   (fn: (HTMLElement) => void): this`        | Calls the user provided function `fn` on each element and returns `this` for chaining. |
-| `reduce<T> (fn: (T, HTMLElement) => T, init?:T): T`  | Executes a reducer function, `fn` on each element resulting in a single value. ||
+| `reduce<T> (fn: (T, HTMLElement) => T, init?:T): T`  | Executes a reducer function, `fn` on each element resulting in a single value. |
 | `concat    (sels: Selector): this`                   | Adds the contents of one Selection, `sels` instance to to the calling instance. |
 
 ### DOM Tree Manipulation/Element Moving
@@ -40,6 +40,9 @@ The library constructor is accessed through `$` function. The `$` function accep
 | `prependTo (sel: Selector): this`                     | Inserts the elements of the calling `Selection` as the as the first child elements of `sel`.` |
 | `insertInto(sel: Selector, child: HTMLElement): this` | Inserts the elements of the calling `Selection` before the provided child element of `sel`. |
 | `remove    (void): this`                              | Removes all elements contained in the calling `Selection` from the DOM tree. |
+| `children  (css: string): this`                       | Changes the selection to be all child elements of all currently selected elements which match the CSS selector string `css`, if provided, without duplication. |
+| `parents   (css: string): this`                       | Changes the selection to be the parents of all currently selected elements that match the CSS selecte string `css`, if provided, without duplication |
+| `siblings  (css: string): this`                       | CHanges the selection to be all of the siblings of all currently selected elements that match the CSS selector string `css`, if provided, without duplicates. |
 
 ### DOM Element Manipulation
 | Name                                                | Description |
@@ -47,8 +50,8 @@ The library constructor is accessed through `$` function. The `$` function accep
 | `event   (name: string, fn: (Event) => void): this` | Adds the function `fn` as the callback for the event with name `name` for each selected element. |
 | `trigger (name: string, args: EventInit): this`     | Triggers an event named `name` with the provided EventInfo dictionary, `args` on each selected element. |
 | `styles  (styleObj: Object): this`                  | Assigns the style key-value pairs in `styleObj` to the `.style` object of each selected element. |
-| `getAttr (name: string): this`                      | Returns the the value of the attribute named `name` of the first selected element. |
-| `getProp (name: string): this`                      | Returns the the value of the property named `name` of the first selected element. |
+| `getAttr (name: string): string`                    | Returns the the value of the attribute named `name` of the first selected element. |
+| `getProp (name: string): any`                       | Returns the the value of the property named `name` of the first selected element. |
 | `setAttr (name: string, value: any): this`          | Sets the attribute named `name` of each selected element to `value`. |
 | `setProp (name: string, value: any): this`          | Sets the property named `name` of each selected element to `value`. |
 | ---                                                 | ---         |
