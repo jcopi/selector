@@ -36,6 +36,14 @@ class Selector {
         return this.elements.size;
     }
 
+    get value () {}
+
+    get text () {}
+
+    get html () {}
+
+
+
     has (el) {
         return this.elements.has(el);
     }
@@ -130,50 +138,50 @@ class Selector {
         return this;
     }
 
-    event (name, callbackFn) {
+    event (name, fn) {
         if (name.startsWith("on")) name = name.substring(2);
 
         this.elements.forEach(function (v) {
-            v.addEventListener(name, callbackFn);
+            v.addEventListener(name, fn);
         });
         return this;
     }
 
-    trigger (str, args) {
-        if (str.startsWith("on")) str = str.substring(2);
+    trigger (name, args) {
+        if (name.startsWith("on")) name = name.substring(2);
         if (!args) args = {};
 
         switch (true) {
-        case (str.startsWith("key") == 0):
+        case (name.startsWith("key") == 0):
             /* if the event begins with 'key', dispatch a KeyboardEvent */
             this.elements.forEach(function (v) {
                 args.relatedTarget = v;
-                var ev = new KeyboardEvent(str, opts);
+                var ev = new KeyboardEvent(name, opts);
                 v.dispatchEvent(ev);
             });
             break;
             /*  All other event will be dispatched as MouseEvents
                 Some events require a specific button index  */
-        case (str == "click" || str == "mouseup" || str == "mousedown"):
+        case (name == "click" || name == "mouseup" || name == "mousedown"):
             this.elements.forEach(function (v) {
                 args.button = 0;
                 args.relatedTarget = v;
-                var ev = new MouseEvent(str, args);
+                var ev = new MouseEvent(name, args);
                 v.dispatchEvent(ev);
             });
             break;
-        case (str == "contextmenu"):
+        case (name == "contextmenu"):
             this.elements.forEach(function (v) {
                 args.button = 2;
                 args.relatedTarget = v;
-                var ev = new MouseEvent(str, args);
+                var ev = new MouseEvent(name, args);
                 v.dispatchEvent(ev);
             });
             break;
         default:
             this.elements.forEach(function (v) {
                 args.relatedTarget = v;
-                var ev = new MouseEvent(str, args);
+                var ev = new MouseEvent(name, args);
                 v.dispatchEvent(ev);
             });
             break;
