@@ -403,7 +403,7 @@ $.css = function (selector, parent) {
 $.tag = function (tname, parent) {
     if (!(parent && "getElementsByTagName" in parent)) parent = document;
 
-    let elements = new Set(parent.getElementsByClassName(tname));
+    let elements = new Set(parent.getElementsByTagName(tname));
     return new Selector(elements, parent);
 };
 
